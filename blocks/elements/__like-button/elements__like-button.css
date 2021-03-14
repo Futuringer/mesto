@@ -6,7 +6,8 @@
   margin-left: 25px;
   width:22px;
   height: 19px;
-  background-image: url("./../images/like-sign.png");
+  background-size: cover;
+  background-image: url("./../../../images/like-sign.png");
 }
 
 .elements__like-button:focus {
@@ -16,5 +17,5 @@ outline: none;
 .elements__like-button:active {
   opacity: 1;
   background-size: cover;
-  background-image: url("./../images/like-sign-filled.png");
+  background-image: url("./../../../images/like-sign-filled.png");
 }
