@@ -41,7 +41,12 @@ background-color: black;
   }
   }
 
+.content {
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+}
+
 .profile {
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
   display: flex;
   color: white;
   width: 100%;
@@ -194,6 +199,7 @@ width: 22px;
 
 @media screen and (max-width: 767px) {
   .elements {
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
     margin-bottom: 48px;
   }
   }
@@ -275,7 +281,7 @@ outline: none;
 }
 
 .footer {
-
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
 }
 
 .footer__title {
@@ -294,6 +300,7 @@ outline: none;
   }
 
 .popup {
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
   position: fixed;
   top: 0;
   left: 0;

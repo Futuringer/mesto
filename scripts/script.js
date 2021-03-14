@@ -1,4 +1,4 @@
-console.log(`hello`);
+
 let editButton = document.querySelector('.profile__edit-button');
 let closeButton = document.querySelector('.popup__close-button');
 let popup = document.querySelector('.popup');
@@ -22,7 +22,6 @@ function formSubmitHandler (evt) {
   evt.preventDefault();
 	let nameInput = document.querySelector('.popup__name');
 	let jobInput = document.querySelector('.popup__description');
-  console.log(nameInput.value);
   document.querySelector('.profile__name-text').textContent = nameInput.value;
   document.querySelector('.profile__description').textContent = jobInput.value;
   closeEditPopup ();
