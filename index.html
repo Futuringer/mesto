@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!--<html lang="ru">-->
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,19 +13,15 @@
     </header>
     <main class="content">
       <section class="profile">
-        <img src="./images/profile-image.png" alt="Аватар пользователя" class="profile__image">
+        <img src="./images/profile-image.jpg" alt="Аватар пользователя" class="profile__image">
         <div class="profile__info">
           <div class="profile__name">
             <h1 class="profile__name-text">Жак-Ив Кусто</h1>
-            <button class="profile__edit-button vector-element-opacity">
-              <img src="./images/pen.png" alt="редактироват" class="profile__edit-button-image">
-                
-            </button>
+            <button class="profile__edit-button vector-element-opacity" type="button"></button>
           </div>
           <p class="profile__description">Исследователь океана</p>
         </div>
-        <button class="profile__add-button vector-element-opacity">
-          <img src="./images/plus-sign.png" alt="Добавить" class="profile__plus-sign">
+        <button class="profile__add-button vector-element-opacity" type="button">
         </button>
       </section>
       <section class="elements">
@@ -33,61 +29,49 @@
           <li class="elements__item">
             <img src="./images/karachaevsk_fillet.png" alt="Разрушенная церковь и лес" class="elements__image">
             <div class="elements__footer">
-              <div class="elements__footer-content">
-                <p class="elements__title">Карачаевск</p>
-                <button class="elements__like-button vector-element-opacity">
-                </button>
-              </div>  
+              <h3 class="elements__title">Карачаевск</h3>
+              <button class="elements__like-button vector-element-opacity" type="button">
+              </button>
             </div>
           </li>
           <li class="elements__item">
             <img src="./images/elbrus_fillet.png" alt="Горы" class="elements__image">
             <div class="elements__footer">
-              <div class="elements__footer-content">
-                <p class="elements__title">Гора Эльбрус</p>
-                <button class="elements__like-button vector-element-opacity">
-                </button>
-              </div>  
+              <h3 class="elements__title">Гора Эльбрус</h3>
+              <button class="elements__like-button vector-element-opacity" type="button">
+              </button>
             </div>
           </li>
           <li class="elements__item">
             <img src="./images/dombai_fillet.png" alt="Заснеженные горы и лес" class="elements__image">
             <div class="elements__footer">
-              <div class="elements__footer-content">
-                <p class="elements__title">Домбай</p>
-                <button class="elements__like-button vector-element-opacity">
-                </button>
-              </div>  
+              <h3 class="elements__title">Домбай</h3>
+              <button class="elements__like-button vector-element-opacity" type="button">
+              </button>
             </div>
           </li>
           <li class="elements__item">
             <img src="./images/elbrus_fillet.png" alt="Горы" class="elements__image">
             <div class="elements__footer">
-              <div class="elements__footer-content">
-                <p class="elements__title">Гора Эльбрус</p>
-                <button class="elements__like-button vector-element-opacity">
-                </button>
-              </div>  
+              <h3 class="elements__title">Гора Эльбрус</h3>
+              <button class="elements__like-button vector-element-opacity" type="button">
+              </button>
             </div>
           </li>
           <li class="elements__item">
             <img src="./images/dombai_fillet.png" alt="Заснеженные горы и лес" class="elements__image">
             <div class="elements__footer">
-              <div class="elements__footer-content">
-                <p class="elements__title">Домбай</p>
-                <button class="elements__like-button vector-element-opacity">
-                </button>
-              </div>  
+              <h3 class="elements__title">Домбай</h3>
+              <button class="elements__like-button vector-element-opacity" type="button">
+              </button>
             </div>
           </li>
           <li class="elements__item">
             <img src="./images/karachaevsk_fillet.png" alt="Разрушенная церковь и лес" class="elements__image">
             <div class="elements__footer">
-              <div class="elements__footer-content">
-                <p class="elements__title">Карачаево-Черкесия</p>
-                <button class="elements__like-button vector-element-opacity">
-                </button>
-              </div>  
+              <h3 class="elements__title">Карачаево-Черкесия</h3>
+              <button class="elements__like-button vector-element-opacity" type="button">
+              </button>
             </div>
           </li>
         </ul>
@@ -98,16 +82,15 @@
     </footer>
     <div class="popup">
       <div class="popup__container">
-        <button class="popup__close-button vector-element-opacity">
-          <img src="./images/plus-sign.png" alt="Закрыть" class="popup__close-image">
-        </button>
-        <h1 class="popup__header">Редактировать профиль</h1>
-        <form action="" class="popup__form">
-          <input  class="popup__input popup__name" type="text" name="firstname" placeholder="Иванов Иван">
-          <input  class="popup__input popup__description" type="text" name="firstname" placeholder="Иванов Иван">
-          <button class="popup__submit" type="submit"  value="submit">Сохранить</button>
-        </form>
+        <button class="popup__close-button vector-element-opacity" type="button">
 
+        </button>
+        <h3 class="popup__header">Редактировать профиль</h3>
+        <form class="popup__form">
+          <input  class="popup__input popup__name" type="text" name="firstname" >
+          <input  class="popup__input popup__description" type="text" name="description" >
+          <button class="popup__submit" type="submit">Сохранить</button>
+        </form>
       </div>
     </div>
   </div>

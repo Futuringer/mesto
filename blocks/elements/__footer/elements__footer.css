@@ -1,5 +1,9 @@
 .elements__footer {
-  background-color: white;
-  height: 80px;
+  background-color: #ffffff;
   border-radius: 0 0 10px 10px;
+  line-height: 1;
+  padding: 25px 15px 31px 21px;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
 }
