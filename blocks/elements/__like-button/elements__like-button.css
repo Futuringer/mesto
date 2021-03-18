@@ -8,6 +8,7 @@
   height: 19px;
   background-size: cover;
   background-image: url("./../../../images/like-sign.png");
+  cursor: pointer;
 }
 
 .elements__like-button:focus {
