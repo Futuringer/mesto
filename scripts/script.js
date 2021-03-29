@@ -57,12 +57,14 @@ function deleteCard (deleteElement) { //удаляем карту по кноп�
 function openExpandPopup (elementImage, elementTitle) { //функция раскрытия картинки
   expandImage.src = elementImage.src;
   expandHeader.textContent = elementTitle.textContent;
+  expandImage.alt = ("Фотография " + elementTitle.textContent);
   openPopup(popupExpand);
 }
 
 function createNewCard (name,link) {  //функция создания новой карточки
   const newCard  = cardTemplate.cloneNode(true);
   newCard.querySelector('.elements__title').textContent = name;
+  newCard.querySelector('.elements__image').alt = ("Фотография " + name); //alt
   newCard.querySelector('.elements__image').src = link;
   const cardLike = newCard.querySelector('.elements__like-button');
   cardLike.addEventListener('click', function(){  //смотрим не кликают ли по лайку
