@@ -15,7 +15,7 @@
 outline: none;
 }
 
-.elements__like-button:active {
+/*.elements__like-button:active {
   opacity: 1;
   background-size: cover;
   background-image: url("./../../../images/like-sign-filled.png");
