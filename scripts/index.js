@@ -18,83 +18,65 @@ const addCardButton = document.querySelector('.profile__add-button');
 const addCardFormElement = popupAddCard.querySelector('.popup__form'); //ФОРМА создания новой карты
 
 const cardTemplate = document.querySelector('#newCard').content; //темплэйт создания карточки
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-];
 
-function toggleLike (likeElement) {//функция поставить/снять лайк
+function handleLikeClick (likeElement) {//функция поставить/снять лайк
   likeElement.classList.toggle('elements__like-button_liked');
 }
 
-function deleteCard (deleteElement) { //удаляем карту по кнопке мусорного бочка
+function handleCardDelete (deleteElement) { //удаляем карту по кнопке мусорного бочка
   const imageItem = deleteElement.closest('.elements__item');
   imageItem.remove();
 }
 
-function openExpandPopup (elementImage, elementTitle) { //функция раскрытия картинки
+function handleExpandPopup (elementImage, elementTitle) { //функция раскрытия картинки
   expandImage.src = elementImage.src;
   expandHeader.textContent = elementTitle.textContent;
   expandImage.alt = ("Фотография " + elementTitle.textContent);
   openPopup(popupExpand);
 }
 
-function createNewCard (name,link) {  //функция создания новой карточки
+function createNewCard (cardData) {  //функция создания новой карточки. Отсылать сюда a.NAME a.LINK
   const newCard  = cardTemplate.cloneNode(true);
-  newCard.querySelector('.elements__title').textContent = name;
-  newCard.querySelector('.elements__image').alt = ("Фотография " + name); //alt
-  newCard.querySelector('.elements__image').src = link;
+  newCard.querySelector('.elements__title').textContent = cardData.name;
+  newCard.querySelector('.elements__image').alt = ("Фотография " + cardData.name); //alt
+  newCard.querySelector('.elements__image').src = cardData.link;
   const cardLike = newCard.querySelector('.elements__like-button');
-  cardLike.addEventListener('click', function(){  //смотрим не кликают ли по лайку
-    toggleLike(cardLike);
-  })
+  cardLike.addEventListener('click', () =>  //смотрим не кликают ли по лайку
+    handleLikeClick(cardLike));
+
   const cardDelete = newCard.querySelector('.elements__delete-button');
-  cardDelete.addEventListener('click', function(){  //смотрим не кликают ли по мусорному бочонку
-    deleteCard(cardDelete);
-  })
+  cardDelete.addEventListener('click', () => handleCardDelete(cardDelete));//смотрим не кликают ли по мусорному бочонку
+
   const cardImage = newCard.querySelector('.elements__image');
   const cardTitle = newCard.querySelector('.elements__title');
-  cardImage.addEventListener('click', function(){  //смотрим не кликают ли по картинке чтоб ее открыть
-    openExpandPopup(cardImage, cardTitle);
-  })
+  cardImage.addEventListener('click', () => handleExpandPopup(cardImage, cardTitle));//смотрим не кликают ли по картинке чтоб ее открыть
   return newCard;
 }
 
-const elementsList = document.querySelector('.elements__list'); //записываем в ДОМ наши карточки
-initialCards.forEach(function(item) {
-  elementsList.prepend(createNewCard (item.name, item.link))
-});
+function renderCard(data, wrap) {    
+  wrap.prepend(createNewCard(data))
+};
 
-function addCardFormSubmitHandler (evt) { //обработчик нажатия на сабмит формы создания новой карты
-  evt.preventDefault();
-  elementsList.prepend(createNewCard (addCardPlaceInput.value, addCardLinkInput.value))
-  closePopup (popupAddCard);
+const elementsList = document.querySelector('.elements__list'); //записываем в ДОМ наши карточки
+initialCards.forEach((item) => renderCard(item, elementsList));
+
+function handleAddCardFormSubmit (evt) { //обработчик нажатия на сабмит формы создания новой карты
+  evt.preventDefault(); //делаем объект чтоб передавать одним значением в создание новой карты
+  const cardData =  {
+    name: addCardPlaceInput.value,
+    link: addCardLinkInput.value
+  };
+  renderCard(cardData, elementsList);
+  clearForm(addCardFormElement);
+  closePopup(popupAddCard);
 }
 
 function openPopup(popup) { //закрыть попап
   popup.classList.add('popup_opened')
+}
+
+function clearForm(form) { //очищаем форму
+  form.reset();
 }
 
 function closePopup (popup) { //открыть попап
@@ -110,25 +92,22 @@ function preloadEditInfo () {  //подгружаем информацию о и
   editJobInput.value = profileDescription.textContent;
 }
 
-function editFormSubmitHandler (evt) {  //обработчик нажатия на сабмит формы редактированияпрофиля
+function handleEditFormSubmit (evt) {  //обработчик нажатия на сабмит формы редактированияпрофиля
   evt.preventDefault();
   receiveInfo(profileName, editNameInput);
   receiveInfo(profileDescription, editJobInput);
   closePopup (popupEdit);
 }
 
-expandCloseButton.addEventListener('click', function(){  //закрыть форму просмотра большого изображения
-  closePopup (popupExpand);
-})
+expandCloseButton.addEventListener('click', () => closePopup (popupExpand)); //закрыть форму просмотра большого изображения
 
-editButton.addEventListener('click', function() { //функция открытия окна редактирования
+editButton.addEventListener('click', () => {
   preloadEditInfo();
-  openPopup(popupEdit)});
+  openPopup(popupEdit)});//функция открытия окна редактирования
 
-editCloseButton.addEventListener('click', function() {closePopup(popupEdit)});//закрыть редактирование профиля
-addCardCloseButton.addEventListener('click', function() {closePopup(popupAddCard)});//закрыть создание карточки
-editFormElement.addEventListener('submit', editFormSubmitHandler);// сабмит редактирования профиля
+editCloseButton.addEventListener('click', () => closePopup(popupEdit));//закрыть редактирование профиля
+addCardCloseButton.addEventListener('click', () => closePopup(popupAddCard));//закрыть создание карточки
+editFormElement.addEventListener('submit', handleEditFormSubmit);// сабмит редактирования профиля
 
-addCardFormElement.addEventListener('submit', addCardFormSubmitHandler); //сабмит добавления новой карты
-addCardButton.addEventListener('click', function() { //открыть форму создания новой карточки
-  openPopup(popupAddCard)});
+addCardFormElement.addEventListener('submit', handleAddCardFormSubmit); //сабмит добавления новой карты
+addCardButton.addEventListener('click', () => openPopup(popupAddCard)); //открыть форму создания новой карточки
