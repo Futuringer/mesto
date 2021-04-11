@@ -42,7 +42,7 @@ function createNewCard (cardData) {  //функция создания ново�
   newCard.querySelector('.elements__image').src = cardData.link;
   const cardLike = newCard.querySelector('.elements__like-button');
   cardLike.addEventListener('click', () =>  //смотрим не кликают ли по лайку
-    handleLikeClick(cardLike));
+  handleLikeClick(cardLike));
 
   const cardDelete = newCard.querySelector('.elements__delete-button');
   cardDelete.addEventListener('click', () => handleCardDelete(cardDelete));//смотрим не кликают ли по мусорному бочонку
@@ -53,7 +53,7 @@ function createNewCard (cardData) {  //функция создания ново�
   return newCard;
 }
 
-function renderCard(data, wrap) {    
+function renderCard(data, wrap) {
   wrap.prepend(createNewCard(data))
 };
 
@@ -71,8 +71,22 @@ function handleAddCardFormSubmit (evt) { //обработчик нажатия �
   closePopup(popupAddCard);
 }
 
-function openPopup(popup) { //закрыть попап
-  popup.classList.add('popup_opened')
+function openPopup(popup) { //открыть попап
+  popup.classList.add('popup_opened');
+  const pageContainer = document.querySelector('.page__container');
+  pageContainer.addEventListener('click', function (evt) {
+    if (evt.target.classList.contains('popup')) {
+    closePopup(popup);
+    }
+  })
+
+  window.addEventListener('keyup', close);
+  function close(evt) {
+    if (evt.key === "Escape") {
+      closePopup(popup);
+      window.removeEventListener('keyup', close)
+    }
+  }
 }
 
 function clearForm(form) { //очищаем форму
@@ -103,11 +117,23 @@ expandCloseButton.addEventListener('click', () => closePopup (popupExpand)); //�
 
 editButton.addEventListener('click', () => {
   preloadEditInfo();
-  openPopup(popupEdit)});//функция открытия окна редактирования
+  openPopup(popupEdit);
+});
+
+function clearPopup(popup) { //Чистим поля ввода формы
+  const inputFields = popup.querySelectorAll('.popup__input');
+  arrayFields = Array.from(inputFields);
+  for(let i = 0; i < inputFields.length; i++) {
+    inputFields[i].value = ''
+  }
+  popup.querySelector('.popup__submit').classList.add('popup__submit_disabled'); //Делаем кнопку неактивной
+}
 
 editCloseButton.addEventListener('click', () => closePopup(popupEdit));//закрыть редактирование профиля
 addCardCloseButton.addEventListener('click', () => closePopup(popupAddCard));//закрыть создание карточки
 editFormElement.addEventListener('submit', handleEditFormSubmit);// сабмит редактирования профиля
-
 addCardFormElement.addEventListener('submit', handleAddCardFormSubmit); //сабмит добавления новой карты
-addCardButton.addEventListener('click', () => openPopup(popupAddCard)); //открыть форму создания новой карточки
+addCardButton.addEventListener('click',() => {
+  openPopup(popupAddCard);
+  clearPopup(popupAddCard);
+})
