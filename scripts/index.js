@@ -1,4 +1,5 @@
 const popupEdit = document.querySelector('.popup_type_edit'); //ДИВ со всем про окно редактирования
+const popupEditSubmit = popupEdit.querySelector('.popup__submit');
 const editButton = document.querySelector('.profile__edit-button');//кнопка с карандашом
 const editFormElement = popupEdit.querySelector('.popup__form');  // ФОРМА редактирования профиля
 const editCloseButton = popupEdit.querySelector('.popup__close-button');//кнопка закрытия окна редактирования
@@ -16,7 +17,7 @@ const addCardPlaceInput = popupAddCard.querySelector('.popup__input_type_place')
 const addCardLinkInput = popupAddCard.querySelector('.popup__input_type_link');//поле ввода ссылки
 const addCardButton = document.querySelector('.profile__add-button');
 const addCardFormElement = popupAddCard.querySelector('.popup__form'); //ФОРМА создания новой карты
-
+const pageContainer = document.querySelector('.page__container');
 const cardTemplate = document.querySelector('#newCard').content; //темплэйт создания карточки
 
 function handleLikeClick (likeElement) {//функция поставить/снять лайк
@@ -67,26 +68,27 @@ function handleAddCardFormSubmit (evt) { //обработчик нажатия �
     link: addCardLinkInput.value
   };
   renderCard(cardData, elementsList);
+  //Тут я изначально ошибся и после рефакторинга пролема всплыла. Я добавлял кнопке сабмита создания новой карточки класс неактивности при открытии окна
+  //тк я удалил функцию toggleButtonState при загрузке и в первый раз она срабатывала после ввода первого символа. В итоге я открывал окно создания новой
+  //карточки, поля были пустыми а кнопка горела. Я так сделал тк эта функция срабатывала когда у нас в полях Формы редактирования био было пусто при загрузке
+  //страницы а информация в поля вносилась при  открытии формы,но функция при открытии не срабатывала и кнопка была  серой когда поля были заполнены  корректно
+  //но не было ввода символов.  Сейчас я переделал так, что  toggleButtonState сразу отрабатывает а у кнопки сабмита формы редактирования при открытии я удаляю
+  //класс неактивности,тк там по идее не может быть некорректных данных при открытии.
+  //document.querySelector('.popup__submit').add(formConfig.inactiveButtonClass);
   clearForm(addCardFormElement);
   closePopup(popupAddCard);
 }
 
 function openPopup(popup) { //открыть попап
   popup.classList.add('popup_opened');
-  const pageContainer = document.querySelector('.page__container');
-  pageContainer.addEventListener('click', function (evt) {
-    if (evt.target.classList.contains('popup')) {
-    closePopup(popup);
-    }
-  })
+  document.addEventListener('keyup', handleEscUp);
+}
 
-  window.addEventListener('keyup', close);
-  function close(evt) {
-    if (evt.key === "Escape") {
-      closePopup(popup);
-      window.removeEventListener('keyup', close)
+function handleEscUp (evt) {
+  const activePopup = document.querySelector('.popup_opened');
+  if (evt.key === "Escape") {
+    closePopup(activePopup);
     }
-  }
 }
 
 function clearForm(form) { //очищаем форму
@@ -95,6 +97,7 @@ function clearForm(form) { //очищаем форму
 
 function closePopup (popup) { //открыть попап
   popup.classList.remove('popup_opened');
+  document.removeEventListener('keyup', handleEscUp);
 }
 
 function receiveInfo (targetField, inputField) { //получаем информацию из форм
@@ -113,27 +116,21 @@ function handleEditFormSubmit (evt) {  //обработчик нажатия н�
   closePopup (popupEdit);
 }
 
-expandCloseButton.addEventListener('click', () => closePopup (popupExpand)); //закрыть форму просмотра большого изображения
-
 editButton.addEventListener('click', () => {
   preloadEditInfo();
+  popupEditSubmit.classList.remove(formConfig.inactiveButtonClass);
   openPopup(popupEdit);
 });
 
-function clearPopup(popup) { //Чистим поля ввода формы
-  const inputFields = popup.querySelectorAll('.popup__input');
-  arrayFields = Array.from(inputFields);
-  for(let i = 0; i < inputFields.length; i++) {
-    inputFields[i].value = ''
+// Не очень понял, имелось ли ввиду тут повесить такой обработчик на каждую форму, querySelectorAll('.popup') и циклом, или через делегирование
+pageContainer.addEventListener('click', (evt) => {
+  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) {
+    closePopup(document.querySelector('.popup_opened'));
   }
-  popup.querySelector('.popup__submit').classList.add('popup__submit_disabled'); //Делаем кнопку неактивной
-}
+});
 
-editCloseButton.addEventListener('click', () => closePopup(popupEdit));//закрыть редактирование профиля
-addCardCloseButton.addEventListener('click', () => closePopup(popupAddCard));//закрыть создание карточки
 editFormElement.addEventListener('submit', handleEditFormSubmit);// сабмит редактирования профиля
 addCardFormElement.addEventListener('submit', handleAddCardFormSubmit); //сабмит добавления новой карты
 addCardButton.addEventListener('click',() => {
   openPopup(popupAddCard);
-  clearPopup(popupAddCard);
 })
