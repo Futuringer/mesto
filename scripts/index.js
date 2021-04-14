@@ -12,6 +12,7 @@ const expandImage = popupExpand.querySelector('.popup__image');
 const expandHeader = popupExpand.querySelector('.popup__image-header');
 const expandCloseButton = popupExpand.querySelector('.popup__close-button');
 const popupAddCard = document.querySelector('.popup_type_add-card'); //ДИВ со всем про добавит карту
+const popupAddCardSubmit = popupAddCard.querySelector('.popup__submit');
 const addCardCloseButton = popupAddCard.querySelector('.popup__close-button');//кнопка закрытия окна просмотра картинки
 const addCardPlaceInput = popupAddCard.querySelector('.popup__input_type_place');//поле ввода названия нового места
 const addCardLinkInput = popupAddCard.querySelector('.popup__input_type_link');//поле ввода ссылки
@@ -68,13 +69,7 @@ function handleAddCardFormSubmit (evt) { //обработчик нажатия �
     link: addCardLinkInput.value
   };
   renderCard(cardData, elementsList);
-  //Тут я изначально ошибся и после рефакторинга пролема всплыла. Я добавлял кнопке сабмита создания новой карточки класс неактивности при открытии окна
-  //тк я удалил функцию toggleButtonState при загрузке и в первый раз она срабатывала после ввода первого символа. В итоге я открывал окно создания новой
-  //карточки, поля были пустыми а кнопка горела. Я так сделал тк эта функция срабатывала когда у нас в полях Формы редактирования био было пусто при загрузке
-  //страницы а информация в поля вносилась при  открытии формы,но функция при открытии не срабатывала и кнопка была  серой когда поля были заполнены  корректно
-  //но не было ввода символов.  Сейчас я переделал так, что  toggleButtonState сразу отрабатывает а у кнопки сабмита формы редактирования при открытии я удаляю
-  //класс неактивности,тк там по идее не может быть некорректных данных при открытии.
-  //document.querySelector('.popup__submit').add(formConfig.inactiveButtonClass);
+  popupAddCardSubmit.classList.add(formConfig.inactiveButtonClass);
   clearForm(addCardFormElement);
   closePopup(popupAddCard);
 }
@@ -122,10 +117,21 @@ editButton.addEventListener('click', () => {
   openPopup(popupEdit);
 });
 
-// Не очень понял, имелось ли ввиду тут повесить такой обработчик на каждую форму, querySelectorAll('.popup') и циклом, или через делегирование
-pageContainer.addEventListener('click', (evt) => {
-  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) {
-    closePopup(document.querySelector('.popup_opened'));
+popupEdit.addEventListener('click', (evt) => {
+  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) { //закрытие формы редактирования по клику на оверлэй и крестику
+    closePopup(popupEdit);
+  }
+});
+
+popupAddCard.addEventListener('click', (evt) => {
+  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) {  //закрытие формы добавления новой карточки по клику на оверлэй и крестику
+    closePopup(popupAddCard);
+  }
+});
+
+popupExpand.addEventListener('click', (evt) => {
+  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) {  //закрытие просмотра изображения по клику на оверлэй и крестику
+    closePopup(popupExpand);
   }
 });
 
