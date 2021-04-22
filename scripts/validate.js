@@ -4,21 +4,32 @@ export class FormValidator{
   {
     this._formConfig = formConfig;
     this._formToValidate = formToValidate;
+    this._buttonElement = this._formToValidate.querySelector(this._formConfig['submitButtonSelector']);//кнопка сабмитаформы с которой мы работаем
   }
 
   _setEventListeners() {
   //Находим все Инпуты внутри одной переданнойформы
     const inputList = Array.from(this._formToValidate.querySelectorAll(this._formConfig['inputSelector']));
-    const buttonElement = this._formToValidate.querySelector(this._formConfig['submitButtonSelector']);
-    this._toggleButtonState(inputList, buttonElement, this._formConfig);
+    this._toggleButtonState(inputList);
     // Каждому инпуту добавляем обработчик событий на ввод и после каждой буквы вызываем checkInputValidity
     inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         this._checkInputValidity(inputElement);
-        this._toggleButtonState(inputList, buttonElement, this._formConfig);
+        this._toggleButtonState(inputList);
       });
     });
   };
+
+  disableSubmitButton() {//деактивируем кнопку сабмита
+    this._buttonElement.classList.add(this._formConfig['inactiveButtonClass']);
+    this._buttonElement.disbaled = true;
+  }
+
+  enableSubmitButton() {//активируем  кнопку сабмита
+    this._buttonElement.classList.remove(this._formConfig['inactiveButtonClass']);
+    this._buttonElement.disbaled = false;
+  }
+
 
   _checkInputValidity = (inputElement) => {//после каждого символа проверяем нужно ли нам идти в функцию показа ошибки
     if (!inputElement.validity.valid) {
@@ -28,13 +39,11 @@ export class FormValidator{
     }
   };
 
-  _toggleButtonState = (inputList, buttonElement) => {//проверяем на валидность всем поля, если не проходим - замораживаем кнопку сабмита
+  _toggleButtonState = (inputList) => {//проверяем на валидность всем поля, если не проходим - замораживаем кнопку сабмита
     if (this._hasInvalidInput(inputList)) {
-      buttonElement.classList.add(this._formConfig['inactiveButtonClass']);
-      buttonElement.disabled = true;
+      this.disableSubmitButton();
     } else {
-      buttonElement.classList.remove(this._formConfig['inactiveButtonClass']);
-      buttonElement.disabled = false;
+      this.enableSubmitButton();
     }
   };
 
@@ -59,7 +68,7 @@ export class FormValidator{
     })
   };
 
-  enableValidation () {//запускаем валиждацию
+  enableValidation () {//запускаем валидацию
     this._setEventListeners();
   }
 }

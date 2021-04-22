@@ -1,4 +1,4 @@
-import {openPopup} from './index.js'
+import {openPopup, OpenImagePopup, popupExpand} from './index.js'
 
 export class Card {
   constructor(cardData, cardSelector){
@@ -15,9 +15,10 @@ export class Card {
   generateCard() {
     this._element = this._getTemplate();
     this._setEventListeners();
+    const elementsImage =   this._element.querySelector('.elements__image');
     this._element.querySelector('.elements__title').textContent = this._name;
-    this._element.querySelector('.elements__image').alt = ("Фотография " + this._name);
-    this._element.querySelector('.elements__image').src = this._link;
+    elementsImage.alt = ("Фотография " + this._name);
+    elementsImage.src = this._link;
     return this._element;
   }
 
@@ -42,12 +43,7 @@ export class Card {
   }
 
   _handleCardOpen() {
-    const expandImage = document.querySelector('.popup__image');
-    const expandHeader = document.querySelector('.popup__image-header');
-    const popupExpand = document.querySelector('.popup_type_open-image');//ДИВ со всем про открыть картинку
-    expandImage.src = this._link;
-    expandHeader.textContent = this._name;
-    expandImage.alt = ("Фотография " + this._name);
+    OpenImagePopup(this._name, this._link);
     openPopup(popupExpand);
   }
 }

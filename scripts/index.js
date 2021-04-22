@@ -30,22 +30,22 @@ const initialCards = [
 ];
 
 const popupEdit = document.querySelector('.popup_type_edit'); //ДИВ со всем про окно редактирования
-const popupEditSubmit = popupEdit.querySelector('.popup__submit');
 const editButton = document.querySelector('.profile__edit-button');//кнопка с карандашом
 const editFormElement = popupEdit.querySelector('.popup__form');  // ФОРМА редактирования профиля
 const editNameInput = popupEdit.querySelector('.popup__input_type_name');//поле ввода имени
 const editJobInput = popupEdit.querySelector('.popup__input_type_description');//поле ввода дескрипшн
 const profileName =  document.querySelector('.profile__name-text');
 const profileDescription = document.querySelector('.profile__description');
-const popupExpand = document.querySelector('.popup_type_open-image');//ДИВ со всем про открыть картинку
+export const popupExpand = document.querySelector('.popup_type_open-image');//ДИВ со всем про открыть картинку
 const popupAddCard = document.querySelector('.popup_type_add-card'); //ДИВ со всем про добавит карту
-const popupAddCardSubmit = popupAddCard.querySelector('.popup__submit');
 const addCardPlaceInput = popupAddCard.querySelector('.popup__input_type_place');//поле ввода названия нового места
 const addCardLinkInput = popupAddCard.querySelector('.popup__input_type_link');//поле ввода ссылки
 const addCardButton = document.querySelector('.profile__add-button');
 const addCardFormElement = popupAddCard.querySelector('.popup__form'); //ФОРМА создания новой карты
 const elementsList = document.querySelector('.elements__list'); //записываем в ДОМ наши карточки
 const template = '#newCard';
+const expandImage = document.querySelector('.popup__image');
+const expandHeader = document.querySelector('.popup__image-header');
 
 const formConfig = {
   formSelector: '.popup__form',    //Все формы
@@ -56,13 +56,22 @@ const formConfig = {
   errorClass: 'popup__error_visible' // показываем текст ошибки
 }
 
-function renderCard(data, wrap, template) {
+const editFormValidation = new FormValidator(formConfig, editFormElement);
+editFormValidation.enableValidation();
+const addCardFormValidation = new FormValidator(formConfig, addCardFormElement);
+addCardFormValidation.enableValidation();
+
+
+function renderCard(data, template) {
   const card = new Card(data, template);
-  const cardElement = card.generateCard();
-  wrap.prepend(cardElement);
+  return card.generateCard(); //создаем и возвращаем новый элемент
 };
 
-initialCards.forEach((item) => renderCard(item, elementsList, template));
+function addInDom (wrap, element) {//добавляем новый элемент в ДОМ
+  wrap.prepend(element);
+}
+
+initialCards.forEach((item) => addInDom (elementsList, renderCard(item, template)));
 
 function handleAddCardFormSubmit (evt) { //обработчик нажатия на сабмит формы создания новой карты
   evt.preventDefault(); //делаем объект чтоб передавать одним значением в создание новой карты
@@ -70,8 +79,9 @@ function handleAddCardFormSubmit (evt) { //обработчик нажатия �
     name: addCardPlaceInput.value,
     link: addCardLinkInput.value
   };
-  renderCard(cardData, elementsList, template);
-  popupAddCardSubmit.classList.add(formConfig.inactiveButtonClass);
+
+  addInDom(elementsList, renderCard(cardData, template));
+  addCardFormValidation.disableSubmitButton();//вызываем функцию класса валидации деактивирующиую сабмит
   clearForm(addCardFormElement);
   closePopup(popupAddCard);
 }
@@ -82,8 +92,8 @@ export function openPopup(popup) { //открыть попап
 }
 
 function handleEscUp (evt) {
-  const activePopup = document.querySelector('.popup_opened');
   if (evt.key === "Escape") {
+    const activePopup = document.querySelector('.popup_opened');
     closePopup(activePopup);
     }
 }
@@ -113,28 +123,34 @@ function handleEditFormSubmit (evt) {  //обработчик нажатия н�
   closePopup (popupEdit);
 }
 
+export function OpenImagePopup (name, link) {//функция заполнения значений формы раскрытия картинки
+  expandImage.src = link;
+  expandHeader.textContent = name;
+  expandImage.alt = ("Фотография " + name);
+}
+
 editButton.addEventListener('click', () => {
   preloadEditInfo();
-  popupEditSubmit.classList.remove(formConfig.inactiveButtonClass);
+  editFormValidation.enableSubmitButton(); //вызываем функцию класса валидации активирующиую сабмит
   openPopup(popupEdit);
 });
 
-popupEdit.addEventListener('click', (evt) => {
-  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) { //закрытие формы редактирования по клику на оверлэй и крестику
-    closePopup(popupEdit);
+function handlePopupClosure(evt) {//обработчик событий кликов по оверлэю и крестику всех форм
+  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) {
+    closePopup(evt.target.closest('.popup'));
   }
+}
+
+popupEdit.addEventListener('click', (evt) => {
+  handlePopupClosure(evt);
 });
 
 popupAddCard.addEventListener('click', (evt) => {
-  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) {  //закрытие формы добавления новой карточки по клику на оверлэй и крестику
-    closePopup(popupAddCard);
-  }
+  handlePopupClosure(evt);
 });
 
 popupExpand.addEventListener('click', (evt) => {
-  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) {  //закрытие просмотра изображения по клику на оверлэй и крестику
-    closePopup(popupExpand);
-  }
+  handlePopupClosure(evt);
 });
 
 editFormElement.addEventListener('submit', handleEditFormSubmit);// сабмит редактирования профиля
@@ -143,7 +159,3 @@ addCardButton.addEventListener('click',() => {
   openPopup(popupAddCard);
 })
 
-const popupFormValidation = new FormValidator(formConfig, editFormElement);
-popupFormValidation.enableValidation();
-const addCardFormValidation = new FormValidator(formConfig, addCardFormElement);
-addCardFormValidation.enableValidation();
