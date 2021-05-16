@@ -1,10 +1,12 @@
-import {openPopup, OpenImagePopup, popupExpand} from './index.js'
+import {openPopup,popupExpand} from './index.js'
 
 export class Card {
-  constructor(cardData, cardSelector){
+  constructor(cardData, cardSelector,{handleCardClick}){
+    this._cardData = cardData;
     this._name = cardData.name;
     this._link = cardData.link;
     this._cardSelector = cardSelector;
+    this._handleCardClick = handleCardClick;
   }
 
   _getTemplate () {
@@ -43,7 +45,7 @@ export class Card {
   }
 
   _handleCardOpen() {
-    OpenImagePopup(this._name, this._link);
+    this._handleCardClick(this._cardData);
     openPopup(popupExpand);
   }
 }

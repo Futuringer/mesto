@@ -1,6 +1,9 @@
 
 import {FormValidator} from './validate.js'
 import {Card} from './card.js'
+import Section from './section.js'
+import Popup from './popup.js'
+import PopupWithImage from './popupWithImage.js';
 
 const initialCards = [
   {
@@ -62,7 +65,7 @@ const addCardFormValidation = new FormValidator(formConfig, addCardFormElement);
 addCardFormValidation.enableValidation();
 
 
-function renderCard(data, template) {
+/*function renderCard(data, template) {
   const card = new Card(data, template);
   return card.generateCard(); //создаем и возвращаем новый элемент
 };
@@ -71,7 +74,34 @@ function addInDom (wrap, element) {//добавляем новый элемен�
   wrap.prepend(element);
 }
 
-initialCards.forEach((item) => addInDom (elementsList, renderCard(item, template)));
+initialCards.forEach((item) => addInDom (elementsList, renderCard(item, template)));*/
+
+
+/*const defaultCardList = new Section({
+  data: items,
+  renderer: (item) => {
+    const card = new DefaultCard(item, '.default-card');
+    const cardElement = card.generateCard();
+    defaultCardList.setItem(cardElement);
+  }
+}, cardListSelector);*/
+const container = ".elements__list";
+const imagePopup = new PopupWithImage('.popup_type_open-image');
+const cardList = new Section({
+  data: initialCards,
+  renderer: (item) => {
+    console.log('index');
+    const card = new Card(item, template,{
+      handleCardClick: (item) =>{ imagePopup.open(item)}
+    });
+    const cardElement = card.generateCard();
+    cardList.setItem(cardElement);
+  }
+},container);
+
+cardList.renderItems();
+
+
 
 function handleAddCardFormSubmit (evt) { //обработчик нажатия на сабмит формы создания новой карты
   evt.preventDefault(); //делаем объект чтоб передавать одним значением в создание новой карты
@@ -123,11 +153,11 @@ function handleEditFormSubmit (evt) {  //обработчик нажатия н�
   closePopup (popupEdit);
 }
 
-export function OpenImagePopup (name, link) {//функция заполнения значений формы раскрытия картинки
+/*function OpenImagePopup (name, link) {//функция заполнения значений формы раскрытия картинки
   expandImage.src = link;
   expandHeader.textContent = name;
   expandImage.alt = ("Фотография " + name);
-}
+}*/
 
 editButton.addEventListener('click', () => {
   preloadEditInfo();
