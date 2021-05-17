@@ -1,4 +1,4 @@
-import {openPopup,popupExpand} from './index.js'
+
 
 export class Card {
   constructor(cardData, cardSelector,{handleCardClick}){
@@ -46,6 +46,6 @@ export class Card {
 
   _handleCardOpen() {
     this._handleCardClick(this._cardData);
-    openPopup(popupExpand);
+
   }
 }

@@ -1,31 +1,36 @@
 export default class Popup {
   constructor(popupSelector) {
     this._popup = document.querySelector(popupSelector);
+  //  this._handleClickClose = this._handleClickClose.bind(this);
   }
 
   open() {
+    console.log('asda');
     this._popup.classList.add('popup_opened');
   }
 
   close() {
     this._popup.classList.remove('popup_opened');
   }
-  __handleEscClose(evt){
-    console.log('handelr');
+
+  _handleEscClose(evt){
     if (evt.key === "Escape") {
       this.close();
       }
   }
 
-  __handleClickClose(evt) {
+  _handleClickClose(evt) {
+    console.log(this);
     if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) {
-      this.close;
+      this.close();
     }
   }
 
+
   setEventListeners() {
-    this._popup.addEventListener('click', this.__handleEscClose.bind(Popup));
-    document.addEventListener('keydown', this.__handleClickClose.bind(Popup));
+    console.log('LIsteners!');
+    this._popup.addEventListener('click', this._handleClickClose.bind(this));
+    document.addEventListener('keydown', this._handleEscClose.bind(this));
   }
 
 }

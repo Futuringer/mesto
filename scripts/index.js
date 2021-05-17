@@ -4,6 +4,8 @@ import {Card} from './card.js'
 import Section from './section.js'
 import Popup from './popup.js'
 import PopupWithImage from './popupWithImage.js';
+import PopupWithForm from './popupWithForm.js';
+import UserInfo from './userInfo.js';
 
 const initialCards = [
   {
@@ -64,29 +66,11 @@ editFormValidation.enableValidation();
 const addCardFormValidation = new FormValidator(formConfig, addCardFormElement);
 addCardFormValidation.enableValidation();
 
-
-/*function renderCard(data, template) {
-  const card = new Card(data, template);
-  return card.generateCard(); //создаем и возвращаем новый элемент
-};
-
-function addInDom (wrap, element) {//добавляем новый элемент в ДОМ
-  wrap.prepend(element);
-}
-
-initialCards.forEach((item) => addInDom (elementsList, renderCard(item, template)));*/
-
-
-/*const defaultCardList = new Section({
-  data: items,
-  renderer: (item) => {
-    const card = new DefaultCard(item, '.default-card');
-    const cardElement = card.generateCard();
-    defaultCardList.setItem(cardElement);
-  }
-}, cardListSelector);*/
 const container = ".elements__list";
 const imagePopup = new PopupWithImage('.popup_type_open-image');
+imagePopup.setEventListeners();
+
+
 const cardList = new Section({
   data: initialCards,
   renderer: (item) => {
@@ -101,91 +85,49 @@ const cardList = new Section({
 
 cardList.renderItems();
 
+const addCardPopup = new PopupWithForm('.popup_type_add-card',{  //Экземпляр класса работающий с формой СОЗДАНИЯ КАРТОЧКИ
+  submit: (item) => {
+    const item2 = {};         //нам приходит из  popupWithForm объект с ключами равными именам полей, перестариваем ключи под формат карты
+    const keys = Object.keys(item)
+    item2.name = item[keys[0]];
+    item2.link = item[keys[1]];
+    //делаем объект чтоб передавать одним значением в создание новой карты
+    const card = new Card(item2, template,{
+      handleCardClick: (item2) =>{ imagePopup.open(item2)}
+    });
+    const cardElement = card.generateCard();
+    cardList.setItem(cardElement);
+    addCardPopup.close();
+  }
+});
+addCardPopup.setEventListeners();
 
+const user = new UserInfo({
+  name:'.profile__name-text',
+  description: '.profile__description'});
 
-function handleAddCardFormSubmit (evt) { //обработчик нажатия на сабмит формы создания новой карты
-  evt.preventDefault(); //делаем объект чтоб передавать одним значением в создание новой карты
-  const cardData =  {
-    name: addCardPlaceInput.value,
-    link: addCardLinkInput.value
-  };
-
-  addInDom(elementsList, renderCard(cardData, template));
-  addCardFormValidation.disableSubmitButton();//вызываем функцию класса валидации деактивирующиую сабмит
-  clearForm(addCardFormElement);
-  closePopup(popupAddCard);
-}
-
-export function openPopup(popup) { //открыть попап
-  popup.classList.add('popup_opened');
-  document.addEventListener('keyup', handleEscUp);
-}
-
-function handleEscUp (evt) {
-  if (evt.key === "Escape") {
-    const activePopup = document.querySelector('.popup_opened');
-    closePopup(activePopup);
-    }
-}
-
-function clearForm(form) { //очищаем форму
-  form.reset();
-}
-
-function closePopup (popup) { //открыть попап
-  popup.classList.remove('popup_opened');
-  document.removeEventListener('keyup', handleEscUp);
-}
-
-function receiveInfo (targetField, inputField) { //получаем информацию из форм
-  targetField.textContent = inputField.value;
-}
-
-function preloadEditInfo () {  //подгружаем информацию о имени и деятельности при открытии окна редактирования
-  editNameInput.value = profileName.textContent;
-  editJobInput.value = profileDescription.textContent;
-}
-
-function handleEditFormSubmit (evt) {  //обработчик нажатия на сабмит формы редактированияпрофиля
-  evt.preventDefault();
-  receiveInfo(profileName, editNameInput);
-  receiveInfo(profileDescription, editJobInput);
-  closePopup (popupEdit);
-}
-
-/*function OpenImagePopup (name, link) {//функция заполнения значений формы раскрытия картинки
-  expandImage.src = link;
-  expandHeader.textContent = name;
-  expandImage.alt = ("Фотография " + name);
-}*/
+const editInfoPopup = new PopupWithForm('.popup_type_edit',{  //Экземпляр класса работающий с формой СОЗДАНИЯ КАРТОЧКИ
+  submit: (item) => {
+  const keys = Object.keys(item)
+   user.setUserInfo({
+     name: item[keys[0]],
+     description: item[keys[1]]
+   })
+   editInfoPopup.close();
+  }
+});
+editInfoPopup.setEventListeners();
 
 editButton.addEventListener('click', () => {
-  preloadEditInfo();
+  const infoToPreload = user.getUserInfo();
+  editNameInput.value = infoToPreload.a;
+  editJobInput.value = infoToPreload.b;
   editFormValidation.enableSubmitButton(); //вызываем функцию класса валидации активирующиую сабмит
-  openPopup(popupEdit);
+  editInfoPopup.open();
 });
 
-function handlePopupClosure(evt) {//обработчик событий кликов по оверлэю и крестику всех форм
-  if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close-button')) {
-    closePopup(evt.target.closest('.popup'));
-  }
-}
 
-popupEdit.addEventListener('click', (evt) => {
-  handlePopupClosure(evt);
-});
-
-popupAddCard.addEventListener('click', (evt) => {
-  handlePopupClosure(evt);
-});
-
-popupExpand.addEventListener('click', (evt) => {
-  handlePopupClosure(evt);
-});
-
-editFormElement.addEventListener('submit', handleEditFormSubmit);// сабмит редактирования профиля
-addCardFormElement.addEventListener('submit', handleAddCardFormSubmit); //сабмит добавления новой карты
 addCardButton.addEventListener('click',() => {
-  openPopup(popupAddCard);
+  addCardPopup.open();;
 })
 
