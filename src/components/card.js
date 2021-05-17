@@ -43,7 +43,6 @@ export class Card {
   }
 
   _handleCardOpen() {
-    this._handleCardClick(this._cardData);
-
+    this._handleCardClick({name: this._name, link: this._link,});
   }
 }
