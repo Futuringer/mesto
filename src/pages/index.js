@@ -1,7 +1,8 @@
 
-import {FormValidator} from '../components/validate.js'
-import {Card} from '../components/card.js'
-import Section from '../components/section.js'
+import './index.css';
+import {FormValidator} from '../components/validate.js';
+import {Card} from '../components/card.js';
+import Section from '../components/section.js';
 import PopupWithImage from '../components/popupWithImage.js';
 import PopupWithForm from '../components/popupWithForm.js';
 import UserInfo from '../components/userInfo.js';
