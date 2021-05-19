@@ -44,7 +44,13 @@ const popupAddCard = document.querySelector('.popup_type_add-card'); //ДИВ с
 const addCardButton = document.querySelector('.profile__add-button');
 const addCardFormElement = popupAddCard.querySelector('.popup__form'); //ФОРМА создания новой карты
 const template = '#newCard';
-
+const imagePopupSelector = '.popup_type_open-image';
+const AddCardPopupSelector = '.popup_type_add-card';
+const userNameSelector = '.profile__name-text';
+const userDescSelector = '.profile__description';
+const EditPopupSelector = '.popup_type_edit';
+const nameUserName = document.querySelector('.popup__input_type_name').name;
+const nameUserDescription = document.querySelector('.popup__input_type_description').name;
 const formConfig = {
   formSelector: '.popup__form',    //Все формы
   inputSelector: '.popup__input',   // Инпуты
@@ -60,29 +66,30 @@ const addCardFormValidation = new FormValidator(formConfig, addCardFormElement);
 addCardFormValidation.enableValidation(); //активировли валидацию на форме создания новой карты
 const container = ".elements__list";
 
-const imagePopup = new PopupWithImage('.popup_type_open-image');    //попап открытой картинки
+const imagePopup = new PopupWithImage(imagePopupSelector);    //попап открытой картинки
 imagePopup.setEventListeners();
+
+const createCard = (cardData, cardTemplate) => {
+  const card = new Card(cardData, cardTemplate,{
+    handleCardClick: (item) =>{imagePopup.open(item)}
+  });
+  return card.generateCard();
+}
 
 const cardList = new Section({    //Экземпляр класса отвечающий за отрисовку ПРЕЗАГРУЖЕННЫХ КАРТ
   data: initialCards,
   renderer: (item) => {
-    const card = new Card(item, template,{
-      handleCardClick: (item) =>{imagePopup.open(item)}
-    });
-    const cardElement = card.generateCard();
+    const card = createCard(item,template)
+    const cardElement = card;
     cardList.setItem(cardElement);
   }
 },container);
 
 cardList.renderItems();
 
-
-const addCardPopup = new PopupWithForm('.popup_type_add-card', {
-  submit: (cardData) => {
-    const card = new Card(cardData, template, {
-      handleCardClick: (cardData) => imagePopup.open(cardData)
-    });
-    const cardElement = card.generateCard();
+const addCardPopup = new PopupWithForm(AddCardPopupSelector, {
+  submit: (item) => {const card = createCard(item,template)
+    const cardElement = card;
     cardList.setItem(cardElement);
     addCardFormValidation.disableSubmitButton();
     addCardPopup.close();
@@ -92,15 +99,14 @@ const addCardPopup = new PopupWithForm('.popup_type_add-card', {
 addCardPopup.setEventListeners();
 
 const user = new UserInfo({   //Инициализируем экземпляр класса ответсвтенного за отрисвку инорфмации о пользователе на странице
-  name:'.profile__name-text',
-  description: '.profile__description'});
-
-const editInfoPopup = new PopupWithForm('.popup_type_edit',{  //Экземпляр класса работающий с формой СОЗДАНИЯ КАРТОЧКИ
+  name: userNameSelector,
+  description: userDescSelector});
+  const editInfoPopup = new PopupWithForm(EditPopupSelector,{  //Экземпляр класса работающий с формой СОЗДАНИЯ КАРТОЧКИ
   submit: (item) => {
-  const keys = Object.keys(item)
+    const keys = Object.keys(item)
     user.setUserInfo({
-      name: item[keys[0]],
-      description: item[keys[1]]
+      name: item[nameUserName],
+      description: item[nameUserDescription]
     })
     editInfoPopup.close();
   }
