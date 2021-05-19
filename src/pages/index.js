@@ -1,11 +1,11 @@
 
 import './index.css';
-import {FormValidator} from '../components/validate.js';
-import {Card} from '../components/card.js';
-import Section from '../components/section.js';
-import PopupWithImage from '../components/popupWithImage.js';
-import PopupWithForm from '../components/popupWithForm.js';
-import UserInfo from '../components/userInfo.js';
+import {FormValidator} from '../components/Validate.js';
+import {Card} from '../components/Card.js';
+import Section from '../components/Section.js';
+import PopupWithImage from '../components/PopupWithImage.js';
+import PopupWithForm from '../components/PopupWithForm.js';
+import UserInfo from '../components/UserInfo.js';
 
 const initialCards = [
   {
@@ -76,20 +76,19 @@ const cardList = new Section({    //Экземпляр класса отвеча
 
 cardList.renderItems();
 
-const addCardPopup = new PopupWithForm('.popup_type_add-card',{  //Экземпляр класса работающий с формой СОЗДАНИЯ КАРТОЧКИ
-  submit: (item) => {
-    const item2 = {};         //нам приходит из  popupWithForm объект с ключами равными именам полей, перестариваем ключи под формат карты
-    const keys = Object.keys(item)
-    item2.name = item[keys[0]];
-    item2.link = item[keys[1]];
-    const card = new Card(item2, template,{
-      handleCardClick: (item2) =>{ imagePopup.open(item2)}
+
+const addCardPopup = new PopupWithForm('.popup_type_add-card', {
+  submit: (cardData) => {
+    const card = new Card(cardData, template, {
+      handleCardClick: (cardData) => imagePopup.open(cardData)
     });
     const cardElement = card.generateCard();
     cardList.setItem(cardElement);
+    addCardFormValidation.disableSubmitButton();
     addCardPopup.close();
   }
 });
+
 addCardPopup.setEventListeners();
 
 const user = new UserInfo({   //Инициализируем экземпляр класса ответсвтенного за отрисвку инорфмации о пользователе на странице
@@ -110,13 +109,15 @@ editInfoPopup.setEventListeners();
 
 editButton.addEventListener('click', () => {  //нажали на кнопку карандаш
   const infoToPreload = user.getUserInfo();
-  editNameInput.value = infoToPreload.a;
-  editJobInput.value = infoToPreload.b;
+  editFormValidation.updateButtonState();
+  editNameInput.value = infoToPreload.userName;
+  editJobInput.value = infoToPreload.userOccupation;
   editFormValidation.enableSubmitButton(); //вызываем функцию класса валидации активирующиую сабмит
   editInfoPopup.open();
 });
 
 addCardButton.addEventListener('click',() => {
-  addCardPopup.open();;
+  addCardPopup.open();
+  addCardFormValidation.updateButtonState();
 })
 

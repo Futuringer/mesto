@@ -68,6 +68,13 @@ export class FormValidator{
     })
   };
 
+updateButtonState() {
+  const inputList = Array.from(this._formToValidate.querySelectorAll(this._formConfig['inputSelector']));
+    inputList.forEach((inputElement) => {
+    this._hideInputError(inputElement);
+  });
+};
+
   enableValidation () {//запускаем валидацию
     this._setEventListeners();
   }

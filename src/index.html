@@ -48,9 +48,9 @@
         </button>
         <h3 class="popup__header">Редактировать профиль</h3>
         <form class="popup__form" name="user-info">
-          <input class="popup__input popup__input_type_name" type="text" name="name" id="name-input" minlength="2" maxlength="40"  required>
+          <input class="popup__input popup__input_type_name" type="text" name="name" id="name-input" placeholder="Имя" minlength="2" maxlength="40"  required>
           <span class="name-input-error"></span>
-          <input class="popup__input popup__input_type_description" type="text" name="description" id="description-input" minlength="2" maxlength="200" required>
+          <input class="popup__input popup__input_type_description" type="text" name="link" id="description-input" placeholder="Вид деятельности" minlength="2" maxlength="200" required>
           <span class="description-input-error"></span>
           <button class="popup__submit" type="submit">Сохранить</button>
         </form>
@@ -62,9 +62,9 @@
         </button>
         <h3 class="popup__header">Новое место</h3>
         <form class="popup__form" name="add-card">
-          <input class="popup__input popup__input_type_place" type="text" name="place" placeholder="Название" id="place-input" required minlength="2" maxlength="30">
+          <input class="popup__input popup__input_type_place" type="text" name="name" placeholder="Название" id="place-input" required minlength="2" maxlength="30">
           <span class="place-input-error"></span>
-          <input class="popup__input popup__input_type_link" type="url" name="image-link" placeholder="Ссылка на картинку" id="image-link-input" required>
+          <input class="popup__input popup__input_type_link" type="url" name="link" placeholder="Ссылка на картинку" id="image-link-input" required>
           <span class="image-link-input-error"></span>
           <button class="popup__submit" type="submit">Создать</button>
         </form>
