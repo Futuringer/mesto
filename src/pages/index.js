@@ -30,7 +30,6 @@ const editFormValidation = new FormValidator(formConfig, editFormElement);
 editFormValidation.enableValidation();  //активировли валидацию на форме редактирования информации
 const addCardFormValidation = new FormValidator(formConfig, addCardFormElement);
 addCardFormValidation.enableValidation(); //активировли валидацию на форме создания новой карты
-//const container = ".elements__list";
 
 const imagePopup = new PopupWithImage(imagePopupSelector);    //попап открытой картинки
 imagePopup.setEventListeners();
