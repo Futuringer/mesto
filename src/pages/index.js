@@ -22,21 +22,22 @@ import {
   EditPopupSelector,
   nameUserName,
   nameUserDescription,
-  formConfig
+  formConfig,
+  container
 } from '../utils/constants.js'
 
 const editFormValidation = new FormValidator(formConfig, editFormElement);
 editFormValidation.enableValidation();  //активировли валидацию на форме редактирования информации
 const addCardFormValidation = new FormValidator(formConfig, addCardFormElement);
 addCardFormValidation.enableValidation(); //активировли валидацию на форме создания новой карты
-const container = ".elements__list";
+//const container = ".elements__list";
 
 const imagePopup = new PopupWithImage(imagePopupSelector);    //попап открытой картинки
 imagePopup.setEventListeners();
 
 const createCard = (cardData, cardTemplate) => {
   const card = new Card(cardData, cardTemplate,{
-    handleCardClick: (item) =>{imagePopup.open(item)}
+    handleCardClick: item => imagePopup.open(item)
   });
   return card.generateCard();
 }
@@ -68,7 +69,6 @@ const user = new UserInfo({   //Инициализируем экземпляр 
   description: userDescSelector});
   const editInfoPopup = new PopupWithForm(EditPopupSelector,{  //Экземпляр класса работающий с формой СОЗДАНИЯ КАРТОЧКИ
   submit: (item) => {
-    const keys = Object.keys(item)
     user.setUserInfo({
       name: item[nameUserName],
       description: item[nameUserDescription]

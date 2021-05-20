@@ -43,6 +43,7 @@ export const userDescSelector = '.profile__description';
 export const EditPopupSelector = '.popup_type_edit';
 export const nameUserName = document.querySelector('.popup__input_type_name').name;
 export const nameUserDescription = document.querySelector('.popup__input_type_description').name;
+export const container = ".elements__list";
 export const formConfig = {
   formSelector: '.popup__form',    //Все формы
   inputSelector: '.popup__input',   // Инпуты
