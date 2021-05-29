@@ -1,6 +1,4 @@
 import Popup from './Popup.js';
-import {Card} from "../pages/index.js";
-
 export default class PopupWithConfirm extends Popup {
   constructor(popupSelector, {submit}) {
     super(popupSelector);
@@ -19,11 +17,8 @@ export default class PopupWithConfirm extends Popup {
     this._form.addEventListener('submit', (evt) => {
       evt.preventDefault();
       this._submitEvtHandler();
-      //document.location.reload();
-      //api.deleteCard(this._data);
       this.close();
     });
-
   }
 
   open(data) {
@@ -34,11 +29,3 @@ export default class PopupWithConfirm extends Popup {
     this.setEventListeners();
   }
 }
-
-
-/*setEventListeners() {
-  super.setEventListeners();
-  this._popup.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    this._submit(this._getInputValues())})
-}*/

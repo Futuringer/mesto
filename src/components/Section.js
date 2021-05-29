@@ -12,11 +12,9 @@ export default class Section {
   setItem(element, place) {
     if (place === 'prepend') {
       this._container.prepend(element);
-      //element.querySelector('.elements__delete-button').style.display = 'none';
     }
     else {
       this._container.append(element);
-     // element.querySelector('.elements__delete-button').style.display = 'none';
     }
   }
 }

@@ -23,14 +23,12 @@ setUserInfo(data) {
   }).then(this._handleResponse)
 }
 
-
 getCardsInfo() {
   return fetch(`${this._baseUrl}/cards`, {
     headers: this._headers,
   })
     .then(this._handleResponse)
 }
-
 
 addCard(data) {
   return fetch(`${this._baseUrl}/cards`, {
@@ -50,15 +48,31 @@ deleteCard(data) {
   }).then(this._handleResponse)
 }
 
-likeCard(data){
-  return fetch(`${this._baseUrl}/cards/likes/cardId`, {
+likeCard(id) {
+  return fetch(this._baseUrl + `/cards/likes/${id}`, {
     method: 'PUT',
+    headers: this._headers
+  })
+  .then(this._handleResponse)
+}
+
+unlikeCard(id) {
+  return fetch(this._baseUrl + `/cards/likes/${id}`, {
+    method: 'DELETE',
+    headers: this._headers
+  })
+  .then(this._handleResponse)
+}
+
+changeAvatar(data) {
+  return fetch(this._baseUrl + `/users/me/avatar`, {
+    method: 'PATCH',
     headers: this._headers,
     body: JSON.stringify({
-      name: data.name,
-      link: data.link
+      avatar: data.avatar,
     })
-  }).then(this._handleResponse)
+  })
+  .then(this._checkResponse)
 }
 
 _handleResponse(res) {
@@ -66,9 +80,5 @@ _handleResponse(res) {
     return res.json();
   }
     return Promise.reject(`Ошибка: ${res.status}`);
-}
-
-
-
-  // другие методы работы с API
+  }
 }

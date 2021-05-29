@@ -1,7 +1,7 @@
 
-
 export class Card {
-  constructor(data, cardSelector, ownCard, {handleCardClick, handleDeleteClick}){
+  constructor(data, cardSelector, ownCard, api, {handleCardClick, handleDeleteClick}){
+    this._api = api;
     this._ownCard = ownCard;
     this._data = data;
     this._name = data.name;
@@ -30,13 +30,12 @@ generateCard() {
   elementsImage.alt = ("Фотография " + this._name);
   elementsImage.src = this._link;
   this.renderLikes(this._data);
-  if(this._ownCard==='false'){
+  if(!this._ownCard){
     this._element.querySelector('.elements__delete-button').style.display = 'none';
   }
+
   return this._element;
 }
-
-
 
 _setEventListeners() {
   this._element.querySelector('.elements__like-button').addEventListener('click', () => {
@@ -50,14 +49,8 @@ _setEventListeners() {
   })
 }
 
-_handleCardLike() {
-  this._element.querySelector('.elements__like-button').classList.toggle('elements__like-button_liked');
-}
-
 handleCardDelete() {
   this._handleDeleteClick(this._data);
-  //
- // api.deleteCard(this._data);
 }
 
 removeFromDOM() {
@@ -67,4 +60,33 @@ removeFromDOM() {
 _handleCardOpen() {
   this._handleCardClick({name: this._name, link: this._link,});
   }
+
+  /*_handleCardLike() {
+    this._element.querySelector('.elements__like-button').classList.toggle('elements__like-button_liked');
+  }*/
+  _handleCardLike() {
+    const likeButton = this._element.querySelector('.elements__like-button');
+    const likesCounter = this._element.querySelector('.elements__likes-counter');
+    if(!(likeButton.classList.contains('elements__like-button_liked'))) {
+      this._api.likeCard(this._id)
+        .then((data) => {
+          likeButton.classList.add('elements__like-button_liked');
+          likesCounter.textContent = data.likes.length;
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    } else {
+      this._api.unlikeCard(this._id)
+        .then((data) => {
+          likeButton.classList.remove('elements__like-button_liked');
+          likesCounter.textContent = data.likes.length;
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+  }
+
+
 }

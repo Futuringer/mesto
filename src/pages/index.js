@@ -9,7 +9,9 @@ import PopupWithConfirm from '../components/PopupWithConfirm.js';
 import UserInfo from '../components/UserInfo.js';
 import Api from '../components/Api';
 import {
-  initialCards,
+  editAvatarPopupSelector,
+  avatarEdditButton,
+  tempCard,
   editButton,
   editFormElement,
   editNameInput,
@@ -27,16 +29,18 @@ import {
   nameUserDescription,
   userAvatar,
   formConfig,
+  avatarFormElement,
   container
 } from '../utils/constants.js'
 
-let tempCard = null;
-let ownerID = null;
+
 
 const editFormValidation = new FormValidator(formConfig, editFormElement);
 editFormValidation.enableValidation();  //активировли валидацию на форме редактирования информации
 const addCardFormValidation = new FormValidator(formConfig, addCardFormElement);
 addCardFormValidation.enableValidation(); //активировли валидацию на форме создания новой карты
+const avatarEditFormValidation =  new FormValidator(formConfig, avatarFormElement);
+avatarEditFormValidation.enableValidation();
 
 const imagePopup = new PopupWithImage(imagePopupSelector);    //попап открытой картинки
 imagePopup.setEventListeners();
@@ -51,76 +55,77 @@ export const api = new Api({
 
 const addCardPopup = new PopupWithForm(AddCardPopupSelector, {
   submit: (item) => {
+    addCardPopup.renderLoading(true)
     api.addCard(item)
       .then((res)=>{
-
-    const card = createCard(res,template)
+    const card = createCard(res,template,true)
     const cardElement = card;
     cardList.setItem(cardElement, 'prepend');
     addCardFormValidation.disableSubmitButton();
     addCardPopup.close();
     })
+    .catch((err) => console.log(err))
+    .finally(()=> addCardPopup.renderLoading(false))
   }
+})
+addCardPopup.setEventListeners();
+
+const editAvatarPopup = new PopupWithForm(editAvatarPopupSelector, {
+  submit:(item) =>{
+    editAvatarPopup.renderLoading(true)
+    api.changeAvatar(item)
+      .then((res)=> {
+        user.setUserAvatar(item);
+      })
+      .catch((err) =>
+      console.log(err))
+      .finally(()=>{
+        editAvatarPopup.close();
+        editAvatarPopup.renderLoading(false)
+      })
+  }
+})
+editAvatarPopup.setEventListeners();
+
+avatarEdditButton.addEventListener('click',()=> {
+  editAvatarPopup.open();
 })
 
 const confirmPopup = new PopupWithConfirm(ConfirmPopupSelector, {
   submit: (data) => {
-
     api.deleteCard(data)
       .then(() => {
-        console.log(tempCard + 'tempCard');
         tempCard.removeFromDOM();
         tempCard = null;
-        //card.handleCardDelete();
       })
-      /*.then(() => {
-        //tempCard = null;
-        //document.location.reload();
-        confirmPopup.close();
-        //cardList.renderItems(api.getCardsInfo())
-        /*api.getCardsInfo()
-        .then((data)=>{
-          document.querySelectorAll('.elements__item').innerHTML = '12312313';
-          //cardList.renderItems(data);
-        })
-      })*/
       .catch((err) => {
         console.log(err);
       })
   }
 })
 
-
-addCardPopup.setEventListeners();
 const user = new UserInfo({   //Инициализируем экземпляр класса ответсвтенного за отрисвку инорфмации о пользователе на странице
   name: userNameSelector,
   description: userDescSelector,
   avatar: userAvatar});
 
-
-
 const cardList = new Section({    //Экземпляр класса отвечающий за отрисовку ПРЕЗАГРУЖЕННЫХ КАРТ
-  //data: initialCards,
   renderer: (item) => {
     let card = null;
     if (item.owner._id === currentUserId) {
-       card = createCard(item,template, 'true')
+      card = createCard(item,template, true)
     }
     else {
-       card = createCard(item,template, 'false')
+      card = createCard(item,template, false)
     }
-    //const card = createCard(item,template, ownCard)
     const cardElement = card;
     console.log(card);
     cardList.setItem(cardElement,'append');
-    //console.log(currentUserId);
   }
 },container);
 
-
-
 const createCard = (cardData, cardTemplate, ownCard) => {
-  const card = new Card(cardData, cardTemplate,ownCard,{
+  const card = new Card(cardData, cardTemplate,ownCard, api,{
     handleCardClick: item => imagePopup.open(item),
     handleDeleteClick: (data) => {
       tempCard = card;
@@ -137,11 +142,21 @@ const editInfoPopup = new PopupWithForm(EditPopupSelector,{  //Экземпля�
       about: item[nameUserDescription],
     })
     api.setUserInfo(item)
+    .then(()=> {
+      user.setUserInfo({
+        name: item[nameUserName],
+        about: item[nameUserDescription],
+      })
+    })
+    .catch((err) =>
+    console.log(err))
+    .finally(()=>{
+      editInfoPopup.renderLoading(false)
+    })
     editInfoPopup.close();
   }
 });
 editInfoPopup.setEventListeners();
-
 
 editButton.addEventListener('click', () => {  //нажали на кнопку карандаш
   const infoToPreload = user.getUserInfo();
@@ -158,14 +173,12 @@ addCardButton.addEventListener('click',() => {
 })
 
 let currentUserId = null;
-
 Promise.all([api.getCardsInfo(), api.getUserInfo()])
     .then(([cards, userData]) => {
         user.setUserInfo(userData);
         user.setUserAvatar(userData);
        // avatarImg.style.backgroundImage = `url(${userData.avatar})`;
         currentUserId = userData._id;
-        console.log('asdasd');
         cardList.renderItems(cards);
     })
     .catch((err) => {
