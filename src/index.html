@@ -12,7 +12,7 @@
     </header>
     <main class="content">
       <section class="profile">
-        <img src="<%=require('./images/profile-image.jpg')%>" alt="Аватар пользователя" class="profile__image">
+        <img src="" alt="Аватар пользователя" class="profile__image">
         <div class="profile__info">
           <div class="profile__name">
             <h1 class="profile__name-text">Жак-Ив Кусто</h1>
@@ -31,8 +31,10 @@
               <button class="elements__delete-button vector-element-opacity" type="button"></button>
               <div class="elements__footer">
                 <h2 class="elements__title"></h2>
-                <button class="elements__like-button vector-element-opacity" type="button">
-                </button>
+                <div class="elements__likes-container">
+                  <button class="elements__like-button vector-element-opacity" type="button"></button>
+                  <p class="elements__likes-counter">2</p>
+                </div>
               </div>
             </li>
           </template>
@@ -70,6 +72,19 @@
         </form>
       </div>
     </div>
+      <div class="popup popup_type_confirm">
+        <div class="popup__container">
+          <form class="popup__form" name="confirmation">
+          <button class="popup__close-button vector-element-opacity" type="button">
+          </button>
+          <h3 class="popup__header">Вы уверены?</h3>
+          <button class="popup__submit" type="submit">Да</button>
+          </form>
+        </div>
+      </div>
+
+
+
     <div class="popup popup_type_open-image">
       <div class="popup__content">
         <button class="popup__close-button vector-element-opacity" type="button"></button>

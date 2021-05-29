@@ -41,8 +41,10 @@ export const AddCardPopupSelector = '.popup_type_add-card';
 export const userNameSelector = '.profile__name-text';
 export const userDescSelector = '.profile__description';
 export const EditPopupSelector = '.popup_type_edit';
+export const ConfirmPopupSelector = '.popup_type_confirm';
 export const nameUserName = document.querySelector('.popup__input_type_name').name;
 export const nameUserDescription = document.querySelector('.popup__input_type_description').name;
+export const userAvatar = document.querySelector('.profile__image')
 export const container = ".elements__list";
 export const formConfig = {
   formSelector: '.popup__form',    //Все формы

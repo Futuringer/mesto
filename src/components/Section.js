@@ -5,11 +5,18 @@ export default class Section {
     this._container = document.querySelector(containerSelector);
   }
 
-  renderItems() {
-    this._renderedItems.forEach(item => this._renderer(item))
+  renderItems(cardsData) {
+    cardsData.forEach(item => this._renderer(item))
   }
 
-  setItem(element) {
-    this._container.prepend(element);
+  setItem(element, place) {
+    if (place === 'prepend') {
+      this._container.prepend(element);
+      //element.querySelector('.elements__delete-button').style.display = 'none';
+    }
+    else {
+      this._container.append(element);
+     // element.querySelector('.elements__delete-button').style.display = 'none';
+    }
   }
 }
