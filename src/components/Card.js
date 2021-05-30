@@ -1,4 +1,4 @@
-
+import {currentUserId} from '../pages/index.js'
 export class Card {
   constructor(data, cardSelector, ownCard, api, {handleCardClick, handleDeleteClick}){
     this._api = api;
@@ -24,6 +24,7 @@ renderLikes(data){
 
 generateCard() {
   this._element = this._getTemplate();
+  this._checkMyLikes();
   this._setEventListeners();
   const elementsImage = this._element.querySelector('.elements__image');
   this._element.querySelector('.elements__title').textContent = this._name;
@@ -33,7 +34,6 @@ generateCard() {
   if(!this._ownCard){
     this._element.querySelector('.elements__delete-button').style.display = 'none';
   }
-
   return this._element;
 }
 
@@ -61,9 +61,14 @@ _handleCardOpen() {
   this._handleCardClick({name: this._name, link: this._link,});
   }
 
-  /*_handleCardLike() {
-    this._element.querySelector('.elements__like-button').classList.toggle('elements__like-button_liked');
-  }*/
+  _checkMyLikes() {
+    this._data.likes.forEach((like) => {
+    if (like._id === currentUserId) {
+      this._element.querySelector('.elements__like-button').classList.add('elements__like-button_liked');
+    }
+  })
+  }
+
   _handleCardLike() {
     const likeButton = this._element.querySelector('.elements__like-button');
     const likesCounter = this._element.querySelector('.elements__likes-counter');
@@ -87,6 +92,4 @@ _handleCardOpen() {
         })
     }
   }
-
-
 }

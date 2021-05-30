@@ -11,7 +11,6 @@ import Api from '../components/Api';
 import {
   editAvatarPopupSelector,
   avatarEdditButton,
-  tempCard,
   editButton,
   editFormElement,
   editNameInput,
@@ -90,7 +89,7 @@ editAvatarPopup.setEventListeners();
 avatarEdditButton.addEventListener('click',()=> {
   editAvatarPopup.open();
 })
-
+let tempCard = null;
 const confirmPopup = new PopupWithConfirm(ConfirmPopupSelector, {
   submit: (data) => {
     api.deleteCard(data)
@@ -119,7 +118,6 @@ const cardList = new Section({    //Экземпляр класса отвеча
       card = createCard(item,template, false)
     }
     const cardElement = card;
-    console.log(card);
     cardList.setItem(cardElement,'append');
   }
 },container);
@@ -130,7 +128,7 @@ const createCard = (cardData, cardTemplate, ownCard) => {
     handleDeleteClick: (data) => {
       tempCard = card;
       confirmPopup.open(data);
-    },
+    }
   });
   return card.generateCard();
 }
@@ -172,7 +170,7 @@ addCardButton.addEventListener('click',() => {
   addCardFormValidation.updateButtonState();
 })
 
-let currentUserId = null;
+export let currentUserId = null;
 Promise.all([api.getCardsInfo(), api.getUserInfo()])
     .then(([cards, userData]) => {
         user.setUserInfo(userData);

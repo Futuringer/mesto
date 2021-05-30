@@ -22,9 +22,7 @@ export default class PopupWithConfirm extends Popup {
   }
 
   open(data) {
-    console.log('confirm');
     this._data = data;
-    console.log(this._data);
     super.open();
     this.setEventListeners();
   }
