@@ -32,8 +32,6 @@ import {
   container
 } from '../utils/constants.js'
 
-
-
 const editFormValidation = new FormValidator(formConfig, editFormElement);
 editFormValidation.enableValidation();  //активировли валидацию на форме редактирования информации
 const addCardFormValidation = new FormValidator(formConfig, addCardFormElement);
@@ -74,12 +72,12 @@ const editAvatarPopup = new PopupWithForm(editAvatarPopupSelector, {
     editAvatarPopup.renderLoading(true)
     api.changeAvatar(item)
       .then((res)=> {
+        editAvatarPopup.close();
         user.setUserAvatar(item);
       })
       .catch((err) =>
       console.log(err))
       .finally(()=>{
-        editAvatarPopup.close();
         editAvatarPopup.renderLoading(false)
       })
   }
@@ -87,6 +85,7 @@ const editAvatarPopup = new PopupWithForm(editAvatarPopupSelector, {
 editAvatarPopup.setEventListeners();
 
 avatarEdditButton.addEventListener('click',()=> {
+  avatarEditFormValidation.disableSubmitButton();
   editAvatarPopup.open();
 })
 let tempCard = null;
@@ -96,6 +95,7 @@ const confirmPopup = new PopupWithConfirm(ConfirmPopupSelector, {
       .then(() => {
         tempCard.removeFromDOM();
         tempCard = null;
+        confirmPopup.close();
       })
       .catch((err) => {
         console.log(err);
@@ -135,23 +135,20 @@ const createCard = (cardData, cardTemplate, ownCard) => {
 
 const editInfoPopup = new PopupWithForm(EditPopupSelector,{  //Экземпляр класса работающий с формой СОЗДАНИЯ КАРТОЧКИ
   submit: (item) => {
-    user.setUserInfo({
-      name: item[nameUserName],
-      about: item[nameUserDescription],
-    })
+    editInfoPopup.renderLoading(true)
     api.setUserInfo(item)
     .then(()=> {
       user.setUserInfo({
         name: item[nameUserName],
         about: item[nameUserDescription],
       })
+      editInfoPopup.close();
     })
     .catch((err) =>
     console.log(err))
     .finally(()=>{
       editInfoPopup.renderLoading(false)
     })
-    editInfoPopup.close();
   }
 });
 editInfoPopup.setEventListeners();
@@ -175,7 +172,6 @@ Promise.all([api.getCardsInfo(), api.getUserInfo()])
     .then(([cards, userData]) => {
         user.setUserInfo(userData);
         user.setUserAvatar(userData);
-       // avatarImg.style.backgroundImage = `url(${userData.avatar})`;
         currentUserId = userData._id;
         cardList.renderItems(cards);
     })

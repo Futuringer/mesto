@@ -12,7 +12,6 @@ getUserInfo() {
 }
 
 setUserInfo(data) {
-  console.log(data);
   return fetch(`${this._baseUrl}/users/me`, {
     method: 'PATCH',
     headers: this._headers,
@@ -72,7 +71,7 @@ changeAvatar(data) {
       avatar: data.avatar,
     })
   })
-  .then(this._checkResponse)
+  .then(this._handleResponse)
 }
 
 _handleResponse(res) {
